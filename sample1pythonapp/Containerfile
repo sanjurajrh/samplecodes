@@ -1,0 +1,4 @@
+FROM registry.access.redhat.com/ubi9/python-39 
+RUN pip install flask 
+COPY app.py /opt/app-root/src/app.py
+CMD ["python3", "app.py"]

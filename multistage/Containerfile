@@ -1,0 +1,11 @@
+FROM registry.access.redhat.com/ubi8/ubi:latest as builder
+RUN yum -y install httpd && yum clean all && rm -rf /var/cache/yum && \
+     sed -i 's/^Listen 80/Listen 8080/g' /etc/httpd/conf/httpd.conf
+COPY app.py /var/www/html/app.py
+
+EXPOSE 8080
+USER 1001
+CMD ["/usr/sbin/httpd", "-D", "FORGROUND"]
+
+FROM quay.io/sanjuraj_rh/pythonapp:v1.0 
+COPY --from=builder /var/www/html/app.py /opt/app-root/src/app.py

@@ -1,0 +1,5 @@
+FROM registry.access.redhat.com/ubi9/ubi:latest
+ENV USER=dell
+RUN adduser ${USER}
+USER ${USER}
+CMD ["printenv"]

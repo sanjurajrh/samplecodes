@@ -1,0 +1,15 @@
+FROM ubi9/ubi:latest
+RUN dnf install httpd -y 
+RUN dnf clean all
+COPY files/index.html /var/www/html
+LABEL description="my custom web server"
+LABEL io.openshift.expose-services="8080:http"
+LABEL io.k8s.description="My Apache container" 
+LABEL io.openshift.tags="httpd apache2"
+
+RUN sed -i 's/^Listen 80/Listen 8080/g' /etc/httpd/conf/httpd.conf
+RUN chgrp -R 0 /var/log/httpd /var/run/httpd 
+RUN chmod -R g=u /var/log/httpd /var/run/httpd 
+EXPOSE 8080
+USER 1001
+ENTRYPOINT /usr/sbin/httpd -DFOREGROUND
