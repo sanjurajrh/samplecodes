@@ -1,0 +1,39 @@
+version: "3.8"
+services:
+  web:
+    image: quay.io/redhattraining/wordpress:5.3.0
+    restart: always
+    volumes:
+      - wordpress:/var/www/html
+    ports:
+      - 8080:80
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: mydbuser
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_PASSWORD: redhat123
+      WORDPRESS_DEBUG: 0
+    depends_on:
+      - db
+    networks:
+      - wpnet
+  db:
+    image: registry.access.redhat.com/rhscl/mariadb-101-rhel7
+    restart: always
+    ports: 
+      - 6603:3306
+    volumes:
+      - wpdbvol:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: mydbuser
+      MYSQL_PASSWORD: redhat123
+      MYSQL_ROOT_PASSWORD: r00tpa55
+    networks:
+      - wpnet
+volumes:
+  wordpress: {}
+  wpdbvol: {}
+networks: 
+  wpnet: {}
+
